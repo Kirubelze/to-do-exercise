@@ -1,0 +1,1332 @@
+Yes. If you want **one single file**, use plain HTML/CSS/JavaScript. You can create a GitHub repo and put everything below into **`index.html`**. No Next.js, npm, or installation needed.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Workout Tracker</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #090d12;
+      color: #f4f6f8;
+      min-height: 100vh;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1050px, 94%);
+      margin: auto;
+      padding: 35px 0 60px;
+    }
+
+    /* HEADER */
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .brand {
+      color: #8b98a7;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-size: clamp(40px, 7vw, 60px);
+      margin: 8px 0;
+      letter-spacing: -3px;
+    }
+
+    .date {
+      color: #7e8996;
+      font-size: 14px;
+    }
+
+    .reset-btn {
+      background: #151b23;
+      color: #aeb9c6;
+      border: 1px solid #29323d;
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      background: #202832;
+    }
+
+    /* HERO */
+
+    .hero {
+      background: #11161d;
+      border: 1px solid #252e39;
+      border-radius: 24px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .hero.complete {
+      border-color: #31583e;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .label {
+      color: #8995a3;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .big-number {
+      font-size: 65px;
+      font-weight: 900;
+      letter-spacing: -4px;
+      margin-top: 5px;
+    }
+
+    .big-number span {
+      color: #687483;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .percent {
+      font-size: 42px;
+      font-weight: 900;
+    }
+
+    .progress {
+      width: 100%;
+      height: 10px;
+      background: #252d36;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 25px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #78d68b;
+      border-radius: 20px;
+      transition: width 0.3s;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      color: #7f8b98;
+      font-size: 13px;
+    }
+
+    .success {
+      display: none;
+      background: #17301f;
+      color: #a8e7b4;
+      padding: 14px;
+      border-radius: 12px;
+      margin-top: 18px;
+      font-weight: bold;
+    }
+
+    /* SECTION */
+
+    .section-title {
+      margin-bottom: 15px;
+    }
+
+    .section-title h2 {
+      font-size: 21px;
+    }
+
+    .section-title p {
+      color: #788492;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    /* CARDS */
+
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .card {
+      background: #11161d;
+      border: 1px solid #252e39;
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .card.complete {
+      border-color: #31583e;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .card h3 {
+      font-size: 18px;
+    }
+
+    .target {
+      display: block;
+      color: #707d8b;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .check {
+      display: none;
+      background: #21492d;
+      color: #8de09c;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card.complete .check {
+      display: flex;
+    }
+
+    .count {
+      margin-top: 20px;
+    }
+
+    .count strong {
+      font-size: 36px;
+    }
+
+    .count span {
+      color: #65717f;
+    }
+
+    .card .progress {
+      height: 8px;
+      margin-top: 15px;
+    }
+
+    .card-info {
+      display: flex;
+      justify-content: space-between;
+      color: #7c8895;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    /* CONTROLS */
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .controls button,
+    .controls input {
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid #2a3440;
+      background: #171d25;
+      color: white;
+      text-align: center;
+    }
+
+    .controls button:hover {
+      background: #222a34;
+    }
+
+    .controls .add {
+      background: #1b3021;
+      border-color: #31583e;
+      color: #a9e7b4;
+    }
+
+    .controls input {
+      width: 100%;
+      outline: none;
+    }
+
+    .quick-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .quick-buttons button {
+      background: #12171e;
+      border: 1px solid #252e39;
+      color: #8f9ba8;
+      padding: 7px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    .quick-buttons button:hover {
+      background: #202832;
+    }
+
+    /* HISTORY */
+
+    .history {
+      margin-top: 30px;
+      background: #11161d;
+      border: 1px solid #252e39;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .history-header {
+      width: 100%;
+      padding: 18px 20px;
+      background: transparent;
+      border: none;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+    }
+
+    .history-content {
+      display: none;
+      border-top: 1px solid #252e39;
+    }
+
+    .history-row {
+      padding: 15px 20px;
+      border-bottom: 1px solid #202832;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .history-row:hover {
+      background: #151b23;
+    }
+
+    .history-row small {
+      display: block;
+      color: #75818e;
+      margin-top: 4px;
+    }
+
+    .history-status {
+      color: #e6b66e;
+    }
+
+    .history-status.complete {
+      color: #8fdda0;
+    }
+
+    .history-details {
+      display: none;
+      background: #0d1218;
+      padding: 10px 20px;
+    }
+
+    .history-details div {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+      color: #8995a3;
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      color: #53606e;
+      font-size: 11px;
+      margin-top: 25px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+      .container {
+        width: 94%;
+        padding-top: 25px;
+      }
+
+      .exercise-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 20px;
+      }
+
+      .big-number {
+        font-size: 55px;
+      }
+
+      .percent {
+        font-size: 34px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <header>
+
+    <div>
+      <div class="brand">🔥 DAILY WORKOUT</div>
+
+      <h1>Get it done.</h1>
+
+      <div class="date" id="date"></div>
+    </div>
+
+    <button
+      class="reset-btn"
+      onclick="resetToday()"
+      title="Reset today's workout"
+    >
+      ↻
+    </button>
+
+  </header>
+
+
+  <!-- MAIN PROGRESS -->
+
+  <section class="hero" id="hero">
+
+    <div class="hero-top">
+
+      <div>
+
+        <div class="label" id="heroLabel">
+          TODAY'S PROGRESS
+        </div>
+
+        <div class="big-number">
+          <span id="completedExercises">0</span>
+          <span>/6</span>
+        </div>
+
+        <div style="color:#8995a3;">
+          exercises completed
+        </div>
+
+      </div>
+
+      <div class="percent" id="overallPercent">
+        0%
+      </div>
+
+    </div>
+
+    <div class="progress">
+      <div
+        class="progress-bar"
+        id="overallProgress"
+      ></div>
+    </div>
+
+    <div class="hero-stats">
+
+      <span id="totalCompleted">
+        0 / 1,250 total
+      </span>
+
+      <span id="remaining">
+        1,250 remaining
+      </span>
+
+    </div>
+
+    <div
+      class="success"
+      id="success"
+    >
+      🎉 WORKOUT COMPLETE — You finished all 1,250 reps!
+    </div>
+
+  </section>
+
+
+  <!-- EXERCISES -->
+
+  <div class="section-title">
+
+    <h2>Today's exercises</h2>
+
+    <p>
+      Break them up however you want throughout the day.
+    </p>
+
+  </div>
+
+  <section
+    class="exercise-grid"
+    id="exerciseGrid"
+  ></section>
+
+
+  <!-- HISTORY -->
+
+  <section class="history">
+
+    <button
+      class="history-header"
+      onclick="toggleHistory()"
+    >
+      <span>📅 Workout History</span>
+      <span id="historyArrow">⌄</span>
+    </button>
+
+    <div
+      class="history-content"
+      id="historyContent"
+    ></div>
+
+  </section>
+
+  <footer>
+    Saved automatically on this device · No account required
+  </footer>
+
+</div>
+
+
+<script>
+
+const exercises = [
+  {
+    id: "legRaises",
+    name: "Leg Raises",
+    target: 100,
+    unit: "reps"
+  },
+  {
+    id: "squats",
+    name: "Squats",
+    target: 150,
+    unit: "reps"
+  },
+  {
+    id: "ropeJump",
+    name: "Rope Jump",
+    target: 500,
+    unit: "jumps"
+  },
+  {
+    id: "pushups",
+    name: "Push-ups",
+    target: 300,
+    unit: "reps"
+  },
+  {
+    id: "pullups",
+    name: "Pull-ups",
+    target: 100,
+    unit: "reps"
+  },
+  {
+    id: "dips",
+    name: "Dips",
+    target: 100,
+    unit: "reps"
+  }
+];
+
+const TOTAL = 1250;
+
+const STORAGE_KEY =
+  "daily-workout-tracker";
+
+let data =
+  JSON.parse(
+    localStorage.getItem(STORAGE_KEY)
+  ) || {};
+
+function getToday() {
+
+  const date = new Date();
+
+  const year =
+    date.getFullYear();
+
+  const month =
+    String(date.getMonth() + 1)
+      .padStart(2, "0");
+
+  const day =
+    String(date.getDate())
+      .padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+
+function getTodayData() {
+
+  const today = getToday();
+
+  if (!data[today]) {
+
+    data[today] = {};
+
+    exercises.forEach(exercise => {
+      data[today][exercise.id] = 0;
+    });
+
+    save();
+
+  }
+
+  return data[today];
+}
+
+
+function save() {
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(data)
+  );
+
+}
+
+
+function formatDate(dateString) {
+
+  const date =
+    new Date(dateString + "T12:00:00");
+
+  return date.toLocaleDateString(
+    "en-US",
+    {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    }
+  );
+
+}
+
+
+function updateExercise(
+  id,
+  amount
+) {
+
+  const today =
+    getTodayData();
+
+  const exercise =
+    exercises.find(
+      e => e.id === id
+    );
+
+  if (!exercise) return;
+
+  let value =
+    Number(today[id] || 0);
+
+  value += amount;
+
+  value =
+    Math.max(
+      0,
+      Math.min(
+        exercise.target,
+        value
+      )
+    );
+
+  today[id] = value;
+
+  save();
+
+  render();
+
+}
+
+
+function setExercise(
+  id,
+  value
+) {
+
+  const today =
+    getTodayData();
+
+  const exercise =
+    exercises.find(
+      e => e.id === id
+    );
+
+  value =
+    Number(value);
+
+  if (!Number.isFinite(value)) {
+    value = 0;
+  }
+
+  value =
+    Math.max(
+      0,
+      Math.min(
+        exercise.target,
+        Math.floor(value)
+      )
+    );
+
+  today[id] = value;
+
+  save();
+
+  render();
+
+}
+
+
+function resetToday() {
+
+  const confirmed =
+    confirm(
+      "Reset today's workout?"
+    );
+
+  if (!confirmed) return;
+
+  const today =
+    getTodayData();
+
+  exercises.forEach(
+    exercise => {
+      today[exercise.id] = 0;
+    }
+  );
+
+  save();
+
+  render();
+
+}
+
+
+function render() {
+
+  const today =
+    getTodayData();
+
+  let totalCompleted = 0;
+
+  let completedExercises = 0;
+
+
+  /* EXERCISE CARDS */
+
+  const grid =
+    document.getElementById(
+      "exerciseGrid"
+    );
+
+  grid.innerHTML = "";
+
+
+  exercises.forEach(
+    exercise => {
+
+      const completed =
+        Number(
+          today[exercise.id] || 0
+        );
+
+      totalCompleted +=
+        completed;
+
+      const percent =
+        Math.round(
+          (completed /
+            exercise.target) *
+          100
+        );
+
+      const complete =
+        completed >=
+        exercise.target;
+
+      if (complete) {
+        completedExercises++;
+      }
+
+
+      const card =
+        document.createElement(
+          "article"
+        );
+
+      card.className =
+        "card" +
+        (complete
+          ? " complete"
+          : "");
+
+
+      card.innerHTML = `
+
+        <div class="card-header">
+
+          <div>
+
+            <h3>
+              ${exercise.name}
+            </h3>
+
+            <span class="target">
+              ${exercise.target}
+              ${exercise.unit} target
+            </span>
+
+          </div>
+
+          <div class="check">
+            ✓
+          </div>
+
+        </div>
+
+
+        <div class="count">
+
+          <strong>
+            ${completed}
+          </strong>
+
+          <span>
+            / ${exercise.target}
+          </span>
+
+        </div>
+
+
+        <div class="progress">
+
+          <div
+            class="progress-bar"
+            style="width:${percent}%"
+          ></div>
+
+        </div>
+
+
+        <div class="card-info">
+
+          <span>
+            ${
+              complete
+                ? "Complete"
+                : (
+                    exercise.target -
+                    completed
+                  ) +
+                  " remaining"
+            }
+          </span>
+
+          <b>
+            ${percent}%
+          </b>
+
+        </div>
+
+
+        <div class="controls">
+
+          <button
+            onclick="
+              updateExercise(
+                '${exercise.id}',
+                -10
+              )
+            "
+          >
+            − 10
+          </button>
+
+
+          <input
+            type="number"
+            min="0"
+            max="${exercise.target}"
+            value="${completed}"
+            onchange="
+              setExercise(
+                '${exercise.id}',
+                this.value
+              )
+            "
+          />
+
+
+          <button
+            class="add"
+            onclick="
+              updateExercise(
+                '${exercise.id}',
+                10
+              )
+            "
+          >
+            + 10
+          </button>
+
+        </div>
+
+
+        <div class="quick-buttons">
+
+          <button
+            onclick="
+              updateExercise(
+                '${exercise.id}',
+                1
+              )
+            "
+          >
+            +1
+          </button>
+
+          <button
+            onclick="
+              updateExercise(
+                '${exercise.id}',
+                10
+              )
+            "
+          >
+            +10
+          </button>
+
+          <button
+            onclick="
+              updateExercise(
+                '${exercise.id}',
+                25
+              )
+            "
+          >
+            +25
+          </button>
+
+          <button
+            onclick="
+              updateExercise(
+                '${exercise.id}',
+                50
+              )
+            "
+          >
+            +50
+          </button>
+
+        </div>
+
+      `;
+
+      grid.appendChild(card);
+
+    }
+  );
+
+
+  /* OVERALL PROGRESS */
+
+  const overall =
+    Math.round(
+      (totalCompleted /
+        TOTAL) *
+      100
+    );
+
+
+  document.getElementById(
+    "completedExercises"
+  ).textContent =
+    completedExercises;
+
+
+  document.getElementById(
+    "overallPercent"
+  ).textContent =
+    overall + "%";
+
+
+  document.getElementById(
+    "overallProgress"
+  ).style.width =
+    overall + "%";
+
+
+  document.getElementById(
+    "totalCompleted"
+  ).textContent =
+    `${totalCompleted.toLocaleString()} / 1,250 total`;
+
+
+  document.getElementById(
+    "remaining"
+  ).textContent =
+    `${(
+      TOTAL - totalCompleted
+    ).toLocaleString()} remaining`;
+
+
+  const hero =
+    document.getElementById(
+      "hero"
+    );
+
+  const success =
+    document.getElementById(
+      "success"
+    );
+
+
+  if (
+    completedExercises === 6
+  ) {
+
+    hero.classList.add(
+      "complete"
+    );
+
+    success.style.display =
+      "block";
+
+    document.getElementById(
+      "heroLabel"
+    ).textContent =
+      "DAY COMPLETE";
+
+  } else {
+
+    hero.classList.remove(
+      "complete"
+    );
+
+    success.style.display =
+      "none";
+
+    document.getElementById(
+      "heroLabel"
+    ).textContent =
+      "TODAY'S PROGRESS";
+
+  }
+
+
+  renderHistory();
+
+}
+
+
+function renderHistory() {
+
+  const container =
+    document.getElementById(
+      "historyContent"
+    );
+
+  const dates =
+    Object.keys(data)
+      .sort()
+      .reverse();
+
+
+  if (dates.length === 0) {
+
+    container.innerHTML =
+      `<div style="
+        padding:20px;
+        color:#788492;
+        text-align:center;
+      ">
+        No workout history yet.
+      </div>`;
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  dates.forEach(
+    date => {
+
+      const record =
+        data[date];
+
+
+      let total = 0;
+
+      let completed =
+        0;
+
+
+      exercises.forEach(
+        exercise => {
+
+          const value =
+            Number(
+              record[
+                exercise.id
+              ] || 0
+            );
+
+          total += value;
+
+          if (
+            value >=
+            exercise.target
+          ) {
+            completed++;
+          }
+
+        }
+      );
+
+
+      const percent =
+        Math.round(
+          (total / TOTAL) *
+          100
+        );
+
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "history-row";
+
+
+      row.innerHTML = `
+
+        <div>
+
+          <strong>
+            ${formatDate(date)}
+          </strong>
+
+          <small>
+            ${completed}/6 exercises
+          </small>
+
+        </div>
+
+        <div
+          class="${
+            completed === 6
+              ? "history-status complete"
+              : "history-status"
+          }"
+        >
+          ${percent}%
+          ${
+            completed === 6
+              ? " · Complete"
+              : " · Incomplete"
+          }
+        </div>
+
+      `;
+
+
+      const details =
+        document.createElement(
+          "div"
+        );
+
+      details.className =
+        "history-details";
+
+
+      exercises.forEach(
+        exercise => {
+
+          const value =
+            record[
+              exercise.id
+            ] || 0;
+
+          const detail =
+            document.createElement(
+              "div"
+            );
+
+          detail.innerHTML = `
+
+            <span>
+              ${exercise.name}
+            </span>
+
+            <b>
+              ${value}/${exercise.target}
+            </b>
+
+          `;
+
+          details.appendChild(
+            detail
+          );
+
+        }
+      );
+
+
+      row.onclick = () => {
+
+        details.style.display =
+          details.style.display ===
+          "block"
+            ? "none"
+            : "block";
+
+      };
+
+
+      container.appendChild(row);
+
+      container.appendChild(details);
+
+    }
+  );
+
+}
+
+
+function toggleHistory() {
+
+  const content =
+    document.getElementById(
+      "historyContent"
+    );
+
+  const arrow =
+    document.getElementById(
+      "historyArrow"
+    );
+
+
+  if (
+    content.style.display ===
+    "block"
+  ) {
+
+    content.style.display =
+      "none";
+
+    arrow.textContent =
+      "⌄";
+
+  } else {
+
+    content.style.display =
+      "block";
+
+    arrow.textContent =
+      "⌃";
+
+  }
+
+}
+
+
+/* DATE */
+
+document.getElementById(
+  "date"
+).textContent =
+  formatDate(getToday());
+
+
+/* INITIAL LOAD */
+
+render();
+
+
+/* CHECK FOR NEW DAY */
+
+setInterval(
+  () => {
+
+    const current =
+      getToday();
+
+    const displayed =
+      document.getElementById(
+        "date"
+      ).textContent;
+
+    if (
+      displayed !==
+      formatDate(current)
+    ) {
+
+      document.getElementById(
+        "date"
+      ).textContent =
+        formatDate(current);
+
+      render();
+
+    }
+
+  },
+  30000
+);
+
+</script>
+
+</body>
+</html>
+```
